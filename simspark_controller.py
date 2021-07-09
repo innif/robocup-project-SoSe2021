@@ -2,9 +2,8 @@
 # add PYTHONPATH
 import os
 import sys
-sys.path.append(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'lecture_code'))
 
-from spark_agent import SparkAgent
+from spark_agent.spark_agent import SparkAgent
 
 
 class SimsparkController(SparkAgent):
@@ -15,7 +14,7 @@ class SimsparkController(SparkAgent):
         print(perception.see)
         return super(SimsparkController, self).think(perception)
 
-    def foo(self):
+    def foo(self) -> None:
         print("hi")
 
 
