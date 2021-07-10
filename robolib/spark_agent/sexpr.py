@@ -4,7 +4,6 @@
 ##
 ##  * public domain *
 ##
-import future
 
 ##  AbstractFilter
 ##
