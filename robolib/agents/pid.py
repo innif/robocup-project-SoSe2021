@@ -1,6 +1,6 @@
 import numpy as np
 from collections import deque
-from lib.spark_agent import SparkAgent, JOINT_CMD_NAMES
+from robolib.spark_agent import SparkAgent, JOINT_CMD_NAMES
 
 
 class PIDController(object):

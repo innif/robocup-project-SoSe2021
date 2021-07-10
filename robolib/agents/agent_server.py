@@ -3,7 +3,7 @@ from time import sleep
 from threading import Thread
 from xmlrpc.server import SimpleXMLRPCServer
 
-from lib.agents.inverse_kinematics import InverseKinematicsAgent
+from robolib.agents.inverse_kinematics import InverseKinematicsAgent
 
 
 class ServerAgent(InverseKinematicsAgent):

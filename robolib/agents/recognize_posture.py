@@ -3,8 +3,8 @@ import pickle
 import numpy as np
 from sklearn import svm
 
-from lib.agents.angle_interpolation import AngleInterpolationAgent
-from lib.keyframes import hello
+from robolib.agents.angle_interpolation import AngleInterpolationAgent
+from robolib.keyframes import hello
 
 
 class PostureRecognitionAgent(AngleInterpolationAgent):

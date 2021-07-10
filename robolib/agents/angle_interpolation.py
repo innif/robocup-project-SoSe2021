@@ -1,7 +1,7 @@
 import scipy.interpolate
 
-from lib.agents.pid import PIDAgent
-from lib.keyframes import hello, wipe_forehead
+from robolib.agents.pid import PIDAgent
+from robolib.keyframes import hello, wipe_forehead
 
 
 class AngleInterpolationAgent(PIDAgent):

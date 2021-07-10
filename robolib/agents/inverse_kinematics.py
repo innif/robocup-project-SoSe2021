@@ -1,4 +1,4 @@
-from lib.agents.forward_kinematics import ForwardKinematicsAgent
+from robolib.agents.forward_kinematics import ForwardKinematicsAgent
 from math import atan2
 from numpy import asarray, linalg, matrix
 from numpy.matlib import identity

@@ -3,7 +3,7 @@ import weakref
 
 from xmlrpc.client import ServerProxy
 
-from lib.keyframes import hello
+from robolib.keyframes import hello
 
 class PostHandler(object):
     '''the post hander wraps function to be excuted in paralle

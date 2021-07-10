@@ -1,6 +1,6 @@
 from numpy.matlib import matrix, identity, sin, cos, dot
 
-from lib.agents.recognize_posture import PostureRecognitionAgent
+from robolib.agents.recognize_posture import PostureRecognitionAgent
 
 
 class ForwardKinematicsAgent(PostureRecognitionAgent):
