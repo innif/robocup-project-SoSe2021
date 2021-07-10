@@ -5,7 +5,7 @@ import socket
 import struct
 from threading import Thread
 from math import pi, atan2, asin, cos, sin
-from sexpr import str2sexpr
+from lib.spark_agent.sexpr import str2sexpr
 import numpy as np
 
 DEG_TO_RAD = pi / 180
