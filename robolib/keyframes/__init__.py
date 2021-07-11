@@ -8,3 +8,5 @@ from .rightBellyToStand import rightBellyToStand
 
 from .hello import hello
 from .wipe_forehead import wipe_forehead
+
+from .tai_chi_chuan import tai_chi_chuan

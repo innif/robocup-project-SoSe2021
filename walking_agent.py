@@ -9,3 +9,6 @@ class WalkingAgent(ClientAgent):
 
     def walkTo(self, x: float, y: float, z: float) -> None:
         raise NotImplementedError()
+
+    def dance(self):
+        self.execute_keyframes(tai_chi_chuan())
