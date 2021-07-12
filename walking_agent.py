@@ -7,8 +7,11 @@ class WalkingAgent(ClientAgent):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def walkTo(self, x: float, y: float, z: float) -> None:
+    def walk_to(self, x: float, y: float, z: float) -> None:
         raise NotImplementedError()
 
     def dance(self):
         self.execute_keyframes(tai_chi_chuan())
+
+
+walking_agent = WalkingAgent()
