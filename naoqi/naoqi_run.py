@@ -39,19 +39,7 @@ def main(robotIP, PORT=9559):
     rpc_server.register_function(motionProxy.rest, 'rest')
     rpc_server.register_function(stand_init, 'stand_init')
     rpc_server.register_function(motionProxy.post.moveTo, 'moveTo')
-
-    #####################
-    ## get robot position before move
-    #####################
-    initRobotPosition = motionProxy.getRobotPosition(False)
-
-    X = 0.3
-    Y = 0.1
-    Theta = math.pi/2.0
-    motionProxy.post.moveTo(X, Y, Theta)
-    # wait is useful because with post moveTo is not blocking function
-    motionProxy.waitUntilMoveIsFinished()
-
+    rpc_server.register_function(motionProxy.waitUntilMoveIsFinished, 'waitUntilMoveIsFinished')
 
     rpc_server.serve_forever()
 

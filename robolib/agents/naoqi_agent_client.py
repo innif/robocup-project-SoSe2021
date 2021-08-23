@@ -18,7 +18,7 @@ class NaoqiClientAgent(object):
         except Fault:
             pass
 
-    def moveTo(self, x, y, theta=math.pi/2.0):
+    def moveTo(self, x, y, theta=0.0):
         self._server_proxy.moveTo(x, y, theta)
 
     def rest(self):
@@ -27,9 +27,16 @@ class NaoqiClientAgent(object):
         except Fault:
             pass
 
+    def waitUntilMoveIsFinished(self):
+        try:
+            self._server_proxy.waitUntilMoveIsFinished()
+        except Fault:
+            pass
+
 if __name__ == '__main__':
     agent = NaoqiClientAgent()
 
     agent.stand_init()
-    agent.moveTo(0.3, 0.1)
+    agent.moveTo(1, 0)
+    agent.waitUntilMoveIsFinished()
     print('Done')
