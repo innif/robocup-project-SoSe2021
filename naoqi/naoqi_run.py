@@ -26,13 +26,9 @@ def main(robotIP, PORT=9559):
         ## Enable arms control by move algorithm
         #####################
         motionProxy.setMoveArmsEnabled(True, True)
-        #~ motionProxy.setMoveArmsEnabled(False, False)
 
-        #####################
-        ## FOOT CONTACT PROTECTION
-        #####################
-        #~ motionProxy.setMotionConfig([["ENABLE_FOOT_CONTACT_PROTECTION",False]])
-        motionProxy.setMotionConfig([["ENABLE_FOOT_CONTACT_PROTECTION", True]])
+        motionProxy.moveInit()
+
 
     setup_robot()
 
