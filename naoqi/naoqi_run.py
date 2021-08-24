@@ -1,43 +1,46 @@
 import argparse
-import math
 from naoqi import ALProxy
 from SimpleXMLRPCServer import SimpleXMLRPCServer
 
 
-def main(robotIP, PORT=9559):
-    rpc_server = SimpleXMLRPCServer(("0.0.0.0", 8000))
+class NaoqiRunner():
 
-    rpc_server.register_introspection_functions()
+    def __init__(self, robot_ip, port=9559):
+        self.rpc_server = SimpleXMLRPCServer(("0.0.0.0", 8000))
 
-    motionProxy  = ALProxy("ALMotion", robotIP, PORT)
-    postureProxy = ALProxy("ALRobotPosture", robotIP, PORT)
+        self.motionProxy  = ALProxy("ALMotion", robot_ip, port)
+        self.postureProxy = ALProxy("ALRobotPosture", robot_ip, port)
 
-    def stand_init():
+        self.rpc_server.register_introspection_functions()
+
+
+        self.rpc_server.register_function(self.motionProxy.rest, 'rest')
+        self.rpc_server.register_function(self.stand_init, 'stand_init')
+        self.rpc_server.register_function(self.motionProxy.post.moveTo, 'moveTo')
+        self.rpc_server.register_function(self.motionProxy.waitUntilMoveIsFinished, 'waitUntilMoveIsFinished')
+
+
+    def stand_init(self):
         # Send robot to Stand Init
-        postureProxy.goToPosture("StandInit", 0.5)
+        self.postureProxy.goToPosture("StandInit", 0.5)
 
-    def setup_robot():
+    def setup_robot(self):
         # Wake up robot
-        motionProxy.wakeUp()
+        self.motionProxy.wakeUp()
 
-        stand_init()
+        self.stand_init()
 
         #####################
         ## Enable arms control by move algorithm
         #####################
-        motionProxy.setMoveArmsEnabled(True, True)
+        self.motionProxy.setMoveArmsEnabled(True, True)
 
-        motionProxy.moveInit()
+        self.motionProxy.moveInit()
 
+    def main(self):
+        self.setup_robot()
 
-    setup_robot()
-
-    rpc_server.register_function(motionProxy.rest, 'rest')
-    rpc_server.register_function(stand_init, 'stand_init')
-    rpc_server.register_function(motionProxy.post.moveTo, 'moveTo')
-    rpc_server.register_function(motionProxy.waitUntilMoveIsFinished, 'waitUntilMoveIsFinished')
-
-    rpc_server.serve_forever()
+        self.rpc_server.serve_forever()
 
 
 
@@ -49,4 +52,5 @@ if __name__ == "__main__":
                         help="Robot port number")
 
     args = parser.parse_args()
-    main(args.naoip, args.naoport)
+    runner = NaoqiRunner(args.naoip, args.naoport)
+    runner.main()
