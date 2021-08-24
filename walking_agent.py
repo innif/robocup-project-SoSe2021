@@ -6,6 +6,4 @@ class WalkingAgent:
         self._agent = NaoqiClientAgent(server_uri=server_uri)
 
     def walk_to(self, x, y, theta=0.0, wait=True):
-        self._agent.moveTo(x, y, theta)
-        if wait:
-            self._agent.waitUntilMoveIsFinished()
+        self._agent.moveTo(x, y, theta, run_async=(not wait))
