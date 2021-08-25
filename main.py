@@ -1,11 +1,4 @@
-import base64
 import logging
-import math
-from threading import Thread
-
-import numpy as np
-from PIL import Image
-import cv2
 
 from cv_agent import CVAgent
 from walking_agent import WalkingAgent
