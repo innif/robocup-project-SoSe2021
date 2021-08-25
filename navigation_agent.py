@@ -6,15 +6,12 @@ TARGET_COLOR = "yellow"
 
 class NavigationAgent:
     def __init__(self, server_uri):
-        self.__cv_agent = CVAgent(server_uri=server_uri)
-        self.__walking_agent = WalkingAgent(server_uri=server_uri)
+        self.cv_agent = CVAgent(server_uri=server_uri)
+        self.walking_agent = WalkingAgent(server_uri=server_uri)
     
     def run(self):
         turn_to_goal()
         walk_to_goal()
-     
-    def update(self, target):
-        self.__cv_agent.update(target)
 
     def turn_to_goal(self):
         """
@@ -32,33 +29,32 @@ class NavigationAgent:
         In order to "move" the goal on the x-axis of the camera image, the robot has to turn around its z-axis using the theta angle.
         The robot axis definitions can be found at http://doc.aldebaran.com/1-14/naoqi/motion/index.html#axis-definition
         """
-        self.update(TARGET_COLOR)
-        goal_center = self.__cv_agent.goal_center
+        self.cv_agent.update(TARGET_COLOR)
+        goal_center = self.cv_agent.goal_center
         while goal_center[0] == None:
-            self.__walking_agent.walk_to(0, 0, theta=0.1, wait=True)
-            goal_center = self.__cv_agent.goal_center
-        while(not -10 <= goal_center[0] <= 10):
-            if(goal_center < 0):
-                self.__walking_agent.walk_to(0, 0, theta=0.1, wait=True)
+            self.walking_agent.walk_to(0, 0, theta=0.1, wait=True)
+            goal_center = self.cv_agent.goal_center
+        while not -10 <= goal_center[0] <= 10 :
+            if goal_center < 0:
+                self.walking_agent.walk_to(0, 0, theta=0.1, wait=True)
             else:
-                self.__walking_agent.walk_to(0, 0, theta=-0.1, wait=True)
-            self.update(TARGET_COLOR)
-            goal_center = self.__cv_agent.goal_center
+                self.walking_agent.walk_to(0, 0, theta=-0.1, wait=True)
+            self.cv_agent.update(TARGET_COLOR)
+            goal_center = self.cv_agent.goal_center
             
     def walk_to_goal(self):
         """
         Robot walks towards the goal as long as the goal size is below a certain threshold.
         Please note: The robot's x-movement axis is not equal to the image's x-axis
         """
-        goal_size_threshold = (100, 50)
-        self.update(TARGET_COLOR)
-        goal_size = self.__cv_agent.goal_size
-        if(goal_size == None):
-            return
-        while goal_size < goal_size_threshold:
-            self.__walking_agent.walk_to(1, 0, theta=0, wait=True)
-            self.update(TARGET_COLOR)
-            goal_size = self.__cv_agent.goal_size
+        self.cv_agent.update(TARGET_COLOR)
+        goal_size = self.cv_agent.goal_size
+        while True:
+            if goal_size == None:
+                return
+            self.walking_agent.walk_to(1, 0, theta=0, wait=True)
+            self.cv_agent.update(TARGET_COLOR)
+            goal_size = self.cv_agent.goal_size
 
 
 
