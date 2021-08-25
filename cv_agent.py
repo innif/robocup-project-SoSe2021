@@ -1,4 +1,5 @@
 # Finn
+from robolib.pynaoqi_wrapper import vision_definitions
 from robolib import NaoqiClientAgent
 
 
@@ -8,7 +9,9 @@ class CVAgent:
         self.goal_center = (100, 100)  # Center of Goal in Pixels
         self.goal_size = (100, 200)  # width, height
 
-        self._agent.subscribe_to_cam(2, 11)
+        resolution = vision_definitions.kQQVGA
+        color_space = vision_definitions.kRGBColorSpace
+        self._agent.subscribe_to_cam(resolution, color_space)
 
     def update(self, perception) -> None:
         pass
