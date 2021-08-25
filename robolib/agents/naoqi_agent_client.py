@@ -47,10 +47,7 @@ class NaoqiClientAgent(object):
             pass
 
     def get_image(self) -> list:
-        encoded_image = self._server_proxy.get_image()
-        decoded_image = encoded_image[:6]
-        decoded_image.append(encoded_image[6])
-        return decoded_image
+        return self._server_proxy.get_image()
 
 
 if __name__ == '__main__':

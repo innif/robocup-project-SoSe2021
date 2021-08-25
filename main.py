@@ -1,7 +1,11 @@
+import base64
 import logging
 import math
 from threading import Thread
+
+import numpy as np
 from PIL import Image
+import cv2
 
 from cv_agent import CVAgent
 from walking_agent import WalkingAgent
@@ -19,24 +23,12 @@ def main():
     walking_agent = WalkingAgent(server_uri=server_uri)
     cv_agent = CVAgent(server_uri=server_uri)
 
-    logger.info('walking_agent started')
+    img = cv_agent.get_image()
+    cv2.imwrite("vision.png", img)
 
-    nao_image = cv_agent.get_image()
-    image_width = nao_image[0]
-    image_height = nao_image[1]
-    array = nao_image[6]
-    image_string = bytes(array, encoding='ascii')
-
-    # Create a PIL Image from our pixel array.
-    im = Image.frombytes("RGB", (image_width, image_height), image_string)
-
-    # Save the image.
-    im.save("camImage.png", "PNG")
-
-    im.show()
-
-    walking_agent.walk_to(1, -0.50, 0, wait=True)
-    logger.info('Finished')
+    logging.info('walking started')
+    walking_agent.walk_to(1, -0.50, 0)
+    logging.info('Finished')
 
 
 if __name__ == '__main__':
