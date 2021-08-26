@@ -1,17 +1,9 @@
 # Sebastian
-from robolib import ClientAgent
-from robolib.keyframes import tai_chi_chuan
+from robolib import NaoqiClientAgent
 
+class WalkingAgent:
+    def __init__(self, server_uri):
+        self._agent = NaoqiClientAgent(server_uri=server_uri)
 
-class WalkingAgent(ClientAgent):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-    def walk_to(self, x: float, y: float, z: float) -> None:
-        raise NotImplementedError()
-
-    def dance(self):
-        self.execute_keyframes(tai_chi_chuan())
-
-
-walking_agent = WalkingAgent()
+    def walk_to(self, x, y, theta=0.0, wait=True):
+        self._agent.moveTo(x, y, theta, run_async=(not wait))
