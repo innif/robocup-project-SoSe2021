@@ -31,7 +31,7 @@ class NavigationAgent:
             self.walking_agent.walk_to(0, 0, theta=0.1, wait=True)
             goal_center = self.cv_agent.goal_center
         while not -10 <= goal_center[0] <= 10 :
-            if goal_center < 0:
+            if goal_center[0] < 0:
                 self.walking_agent.walk_to(0, 0, theta=0.1, wait=True)
             else:
                 self.walking_agent.walk_to(0, 0, theta=-0.1, wait=True)
@@ -46,7 +46,7 @@ class NavigationAgent:
         self.cv_agent.update(TARGET_COLOR)
         goal_size = self.cv_agent.goal_size
         while True:
-            if goal_size == None:
+            if goal_size is None:
                 return
             self.walking_agent.walk_to(1, 0, theta=0, wait=True)
             self.cv_agent.update(TARGET_COLOR)
