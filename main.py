@@ -19,7 +19,10 @@ def main(naoqi_ip, naoqi_port):
 
     logger.info('Start looped procedure to turn robot and walk to goal.')
 
+    navigation_agent.cv_agent.update()
+
     while True:
+        input("type anything")
         navigation_agent.run()
 
 def parse_args():
