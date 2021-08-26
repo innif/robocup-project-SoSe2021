@@ -8,10 +8,6 @@ class NavigationAgent:
     def __init__(self, server_uri):
         self.cv_agent = CVAgent(server_uri=server_uri)
         self.walking_agent = WalkingAgent(server_uri=server_uri)
-    
-    def run(self):
-        turn_to_goal()
-        walk_to_goal()
 
     def turn_to_goal(self):
         """
@@ -19,7 +15,7 @@ class NavigationAgent:
         Please note: The robot's movement axis are not equal to the image's axis. Instead of just the head, the whole
         robot has to turn so the movement direction is correct afterwars.
         Image axis are like this:
-         
+
          ^ y-Axis
          |
          |
@@ -31,7 +27,7 @@ class NavigationAgent:
         """
         self.cv_agent.update(TARGET_COLOR)
         goal_center = self.cv_agent.goal_center
-        while goal_center[0] == None:
+        while goal_center is None:
             self.walking_agent.walk_to(0, 0, theta=0.1, wait=True)
             goal_center = self.cv_agent.goal_center
         while not -10 <= goal_center[0] <= 10 :
@@ -41,7 +37,7 @@ class NavigationAgent:
                 self.walking_agent.walk_to(0, 0, theta=-0.1, wait=True)
             self.cv_agent.update(TARGET_COLOR)
             goal_center = self.cv_agent.goal_center
-            
+
     def walk_to_goal(self):
         """
         Robot walks towards the goal as long as the goal size is below a certain threshold.
@@ -56,6 +52,7 @@ class NavigationAgent:
             self.cv_agent.update(TARGET_COLOR)
             goal_size = self.cv_agent.goal_size
 
+    def run(self):
+        self.turn_to_goal()
+        self.walk_to_goal()
 
-
-navigation_agent = NavigationAgent()
