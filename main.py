@@ -21,8 +21,8 @@ def main(naoqi_ip, naoqi_port):
 
     navigation_agent.cv_agent.update()
 
+    input("type anything")
     while True:
-        input("type anything")
         navigation_agent.run()
 
 def parse_args():

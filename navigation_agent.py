@@ -29,8 +29,11 @@ class NavigationAgent:
         goal_center = self.cv_agent.goal_center
         while goal_center is None:
             self.walking_agent.walk_to(0, 0, theta=0.1, wait=True)
+            self.cv_agent.update(TARGET_COLOR)
             goal_center = self.cv_agent.goal_center
-        while not -10 <= goal_center[0] <= 10 :
+
+
+        while goal_center is not None and not -30 <= goal_center[0] <= 30 :
             if goal_center[0] < 0:
                 self.walking_agent.walk_to(0, 0, theta=0.1, wait=True)
             else:
