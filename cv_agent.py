@@ -7,7 +7,7 @@ import numpy as np
 from robolib.pynaoqi_wrapper import vision_definitions
 from robolib import NaoqiClientAgent
 
-
+# Color-Values of the objects
 hsv_vals_ball = (18, 158, 152)
 hsv_vals_goal_y = (38, 141, 158)
 hsv_vals_goal_b = (110, 188, 179)
@@ -91,12 +91,14 @@ class CVAgent:
         if self.ball:
             (x, y), radius = self.ball
             cv2.circle(img, (int(x), int(y)), int(radius), (0, 255, 0), 2)
+            cv2.putText(img, "BALL", (int(x)+15, int(y)-15), cv2.FONT_ITALIC, 0.6, (0, 0, 255, 255), 2)
         for goal in [self.goal_y, self.goal_b]:
             if goal:
                 (x, y), (w, h) = goal
                 p1 = (int(x - w/2), int(y - h/2))
                 p2 = (int(x + w/2), int(y + h/2))
                 cv2.rectangle(img, p1, p2, (0, 255, 0), 2)
+                cv2.putText(img, "GOAL", (p1[0], p1[1]-10), cv2.FONT_ITALIC, 0.6, (0, 0, 255, 255), 2)
 
     def __search_for_color(self, color):
         """
@@ -189,7 +191,7 @@ class CVAgent:
         return img_better
 
     @staticmethod
-    def __calc_threshold(img, max_thresh_val=100):
+    def __calc_threshold(img, max_thresh_val=85):
         """
         calculate threshold of the similarity-image, so the white spots resemble the parts of the image, matching the
         wanted object. The threshold-value is calculated based on the lowest value in the picture, but limited by the
