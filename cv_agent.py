@@ -17,6 +17,10 @@ debug = True
 
 class CVAgent:
     def __init__(self, server_uri):
+        """
+        Konstruktor
+        @param server_uri: uri for the NaoqiClient
+        """
         self._agent = NaoqiClientAgent(server_uri)
         self.goal_center = (0, 0)  # Center of Goal in Pixels
         self.goal_size = (0, 0)  # width, height
@@ -32,6 +36,10 @@ class CVAgent:
         self.img = None
 
     def update(self, target="blue") -> None:
+        """
+        calculate the positions of the objects
+        @param target: "blue" or "yellow" for color of goal. Standard is blue
+        """
         self.img = self.get_image()
         self.img_hsv = cv2.cvtColor(self.img, cv2.COLOR_BGR2HSV)
         self.ball, cnt_ball = self.__find_ball(hsv_vals_ball)
@@ -64,6 +72,10 @@ class CVAgent:
             cv2.waitKey(1)
 
     def get_image(self):
+        """
+        retrieve image as numpy-array from naoqi-agent
+        @return: image as numpy-array
+        """
         nao_image = self._agent.get_image()
         img_decoded = base64.b64decode(nao_image[6])
         img = (np.reshape(np.frombuffer(img_decoded, dtype='%iuint8' % nao_image[2]),
@@ -72,6 +84,10 @@ class CVAgent:
         return img
 
     def __draw_objects(self, img):
+        """
+        draws the position of all the detected object
+        @param img: image to draw the objects in
+        """
         if self.ball:
             (x, y), radius = self.ball
             cv2.circle(img, (int(x), int(y)), int(radius), (0, 255, 0), 2)
@@ -83,17 +99,32 @@ class CVAgent:
                 cv2.rectangle(img, p1, p2, (0, 255, 0), 2)
 
     def __search_for_color(self, color):
+        """
+        searches for mathing aras to the given color based on self.color_hsv
+        @param color: color to search for
+        @return: contour of the best match
+        """
         img_better = self.__calc_similarity_picture(color)
         img_thresh = self.__calc_threshold(img_better)
         return self.__find_contour_in_mask(img_thresh)
 
     def __find_goal(self, color):
+        """
+        finds the goal in self.img_hsv
+        @param color: color of the goal
+        @return: ((center, size), contour) of goal
+        """
         contour = self.__search_for_color(color)
         if contour is None:
             return None, None
         return self.__get_surrounding_rect(contour), contour
 
     def __find_ball(self, color):
+        """
+        finds the ball in self.img_hsv
+        @param color: color of the ball
+        @return: ((center, radius), contour) of ball
+        """
         contour = self.__search_for_color(color)
         if contour is None:
             return None, None
@@ -101,6 +132,13 @@ class CVAgent:
         return ((x, y), radius), contour
 
     def __calc_similarity_picture(self, color):
+        """
+        Calculate the similarity of an image to an specific color. It calculates the difference to the target color
+        for every channel in the HSV-Image and adds them together with weights applied to every channel. the resulting
+        output is an image where the darkest spots are the most matching to the color.
+        @param color: color to match the image with
+        @return: image with similarity-information
+        """
         wanted_h, wanted_s, wanted_v = color
 
         img_h = self.img_hsv[:, :, 0].astype(np.int32)
@@ -152,6 +190,14 @@ class CVAgent:
 
     @staticmethod
     def __calc_threshold(img, max_thresh_val=100):
+        """
+        calculate threshold of the similarity-image, so the white spots resemble the parts of the image, matching the
+        wanted object. The threshold-value is calculated based on the lowest value in the picture, but limited by the
+        max_thresh_val. So if there is no spot darker than max_thresh_val, no object is being detected.
+        @param img: image to calc the threshold of
+        @param max_thresh_val: maximum value for the threshold.
+        @return: threshold-image
+        """
         min_val = np.min(img)
         thresh = min(min_val + 0.3 * (255 - min_val), max_thresh_val)
         _, img_thresh = cv2.threshold(img, thresh, 255, cv2.THRESH_BINARY_INV)
@@ -165,6 +211,11 @@ class CVAgent:
 
     @staticmethod
     def __find_contour_in_mask(mask):
+        """
+        search for a contour in a threshold image. returns the biggest contour
+        @param mask: image to search a contour in
+        @return: biggest found contour
+        """
         edges, _ = cv2.findContours(mask, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
         max_size = 0
         best_contour = None
@@ -177,6 +228,11 @@ class CVAgent:
 
     @staticmethod
     def __get_surrounding_rect(cnt):
+        """
+        get the surrounding rectangle of a contour for finding the goal
+        @param cnt: contour
+        @return: rectangle in format (center, size)
+        """
         left = tuple(cnt[cnt[:, :, 0].argmin()][0])[0]
         right = tuple(cnt[cnt[:, :, 0].argmax()][0])[0]
         top = tuple(cnt[cnt[:, :, 1].argmin()][0])[1]
@@ -187,7 +243,12 @@ class CVAgent:
         height = bottom - top
         return (center_x, center_y), (width, height)
 
-    def __to_centered_coordinates(self, point):
+    def __to_centered_coordinates(self, point) -> tuple:
+        """
+        converts a point from (0,0) matching top left to (0,0) mathing the center
+        @param point: point to convert
+        @return: converted point
+        """
         h = self.img.shape[0]
         w = self.img.shape[1]
         x, y = point
